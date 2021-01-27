@@ -37,8 +37,8 @@ public class GameController {
 			c.setFill(Color.WHITE);
 			c.setStroke(Color.BLACK);
 			double radius = rectangleSize / 3.0;
-			int x = 175;
-			int y = 175;
+			int x = 3 * rectangleSize + (rectangleSize/2);
+			int y = 3 * rectangleSize + (rectangleSize/2);
 			
 			Disk d = new Disk(x, y, radius, c);
 			
@@ -53,8 +53,8 @@ public class GameController {
 			c.setFill(Color.BLACK);
 			c.setStroke(Color.BLACK);
 			double radius = rectangleSize / 3.0;
-			int x = 225;
-			int y = 175;
+			int x = 4 * rectangleSize + (rectangleSize/2);
+			int y = 3 * rectangleSize + (rectangleSize/2);
 			
 			Disk d = new Disk(x, y, radius, c);
 			
