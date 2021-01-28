@@ -188,8 +188,7 @@ public class GameController {
 		{
 			for(int z = 0; z < tiles; z++)
 			{
-				System.out.print(board[z][i]);
-				System.out.print(" ");
+				System.out.printf("%3d", board[z][i]);
 			}
 			System.out.println();
 		}
