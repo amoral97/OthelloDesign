@@ -89,21 +89,26 @@ public class GameController {
 	{
 		pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
 		    public void handle(MouseEvent event) {
-		    	if(validMoveCheck((int)event.getSceneX()/rectangleSize, (int)event.getSceneY()/rectangleSize, turn))
+		    	int x = (int)event.getSceneX()/rectangleSize;
+    			int y = (int)event.getSceneY()/rectangleSize;
+		    	if(validMoveCheck(x, y, turn))
 		    		{
 		    			if(turn == Color.WHITE)
 		    			{
-		    				board[(int)event.getSceneX()/rectangleSize][(int)event.getSceneY()/rectangleSize]=1;
+		    				board[x][y]=1;
+		    				diskFlipper(Color.WHITE, x, y);
 		    			}
 		    			if(turn == Color.BLACK)
 		    			{
-		    				board[(int)event.getSceneX()/rectangleSize][(int)event.getSceneY()/rectangleSize]=2;
+		    				board[x][y]=2;
+		    				diskFlipper(Color.BLACK, x, y);
 		    			}
 		    			//Turn Swap
 		    			if(turn == Color.BLACK) turn = Color.WHITE;
 		    			else turn = Color.BLACK;
 		    		}
 		        else {System.out.println("Invalid Move"); debugDisplayBoard();}
+		    	
 		    	//Redraw Board and show valid move for next player
     			nextToDiskSpots();
     			lineOfSightCheck(turn);
@@ -115,14 +120,7 @@ public class GameController {
 	private boolean validMoveCheck(int column, int row, Color color)
 	{
 		boolean validMove = true;
-		
-		//Defines all spots that are next to other disks
-		//nextToDiskSpots();
-		
-		//Check for line of sight to same color disks
-		//lineOfSightCheck(color);
 
-		//Final Decision on if it's a valid spot to make a move
 		if(board[column][row] != -1) validMove = false;
         
 		return validMove;
@@ -554,6 +552,464 @@ public class GameController {
 			}
 		}
 	}
+	
+	private void diskFlipper(Color color, int z, int i) {
+		
+					//Check Right line of sight
+					boolean lineOfSight = false;
+					for(int x = z+1; x < tiles; x++)
+					{
+						if(board[x][i] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[x][i] == 2)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[x][i] == 1)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+					}
+					//If line of sight is found, flip disks
+					if(lineOfSight)
+					{
+						for(int x = z+1; x < tiles; x++)
+						{
+							if(board[x][i] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								
+								if(board[x][i] == 2)
+								{
+									break;
+								}
+								board[x][i] = 2;
+							}
+							if(color == Color.WHITE)
+							{
+								
+								if(board[x][i] == 1)
+								{
+									break;
+								}
+								board[x][i] = 1;
+							}
+						}
+					}
+					
+					//Check Left
+					lineOfSight = false;
+					for(int x = z-1; x > 0; x--)
+					{
+						if(board[x][i] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[x][i] == 2)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[x][i] == 1)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+					}
+					if(lineOfSight)
+					{
+						for(int x = z-1; x > 0; x--)
+						{
+							if(board[x][i] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								
+								if(board[x][i] == 2)
+								{
+									break;
+								}
+								board[x][i] = 2;
+							}
+							if(color == Color.WHITE)
+							{
+								
+								if(board[x][i] == 1)
+								{
+									break;
+								}
+								board[x][i] = 1;
+							}
+						}
+					}
+					
+					//Check Down
+					lineOfSight = false;
+					for(int y = i+1; y < tiles; y++)
+					{
+						if(board[z][y] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[z][y] == 2)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[z][y] == 1)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+					}
+					
+					if(lineOfSight)
+					{
+						for(int y = i+1; y < tiles; y++)
+						{
+							if(board[z][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								
+								if(board[z][y] == 2)
+								{
+									break;
+								}
+								board[z][y] = 2;
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[z][y] == 1)
+								{
+									break;
+								}
+								board[z][y] = 1;
+							}
+						}
+					}
+					
+					//Check Up
+					lineOfSight = false;
+					for(int y = i-1; y > 0; y--)
+					{
+						if(board[z][y] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[z][y] == 2)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[z][y] == 1)
+							{
+								lineOfSight = true;
+								break;
+							}
+						}
+					}
+					
+					if(lineOfSight)
+					{
+						for(int y = i-1; y > 0; y--)
+						{
+							if(board[z][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[z][y] == 2)
+								{
+									break;
+								}
+								board[z][y] = 2;
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[z][y] == 1)
+								{
+									break;
+								}
+								board[z][y] = 1;
+							}
+						}
+					}
+					
+					//Diagonal Checks
+					//Right Down
+					lineOfSight = false;
+					int y = i;
+					if(i+1 < tiles)
+					{
+						y = i+1;
+						for(int x = z+1; x < tiles; x++)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							
+							if(y < tiles-1) y++;
+							else break;
+						}
+					}
+					
+					if(lineOfSight)
+					{
+						y = i;
+						if(i+1 < tiles)
+						{
+							y = i+1;
+							for(int x = z+1; x < tiles; x++)
+							{
+								if(board[x][y] <= 0) break;
+								
+								if(color == Color.BLACK)
+								{
+									if(board[x][y] == 2)
+									{
+										break;
+									}
+									board[x][y] = 2;
+								}
+								if(color == Color.WHITE)
+								{
+									if(board[x][y] == 1)
+									{
+										break;
+									}
+									board[x][y] = 1;
+								}
+								
+								if(y < tiles-1) y++;
+								else break;
+							}
+						}
+					}
+					
+					//Left Down
+					lineOfSight = false;
+					if(i+1 < tiles)
+					{
+						y = i+1;
+						for(int x = z-1; x > 0; x--)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							
+							if(y < tiles-1) y++;
+							else break;
+						}
+					}
+					
+					if(lineOfSight)
+					{
+						if(i+1 < tiles)
+						{
+							y = i+1;
+							for(int x = z-1; x > 0; x--)
+							{
+								if(board[x][y] <= 0) break;
+								
+								if(color == Color.BLACK)
+								{
+									if(board[x][y] == 2)
+									{
+										break;
+									}
+									board[x][y] = 2;
+								}
+								if(color == Color.WHITE)
+								{
+									if(board[x][y] == 1)
+									{
+										break;
+									}
+									board[x][y] = 1;
+								}
+								
+								if(y < tiles-1) y++;
+								else break;
+							}
+						}
+					}
+					
+					//Left Up
+					lineOfSight = false;
+					if(i-1 > 1)
+					{
+						y = i-1;
+						for(int x = z-1; x > 0; x--)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							
+							if(y > 0) y--;
+							else break;
+						}
+					}
+					
+					if(lineOfSight)
+					{
+						if(i-1 > 1)
+						{
+							y = i-1;
+							for(int x = z-1; x > 0; x--)
+							{
+								if(board[x][y] <= 0) break;
+								
+								if(color == Color.BLACK)
+								{
+									if(board[x][y] == 2)
+									{
+										break;
+									}
+									board[x][y] = 2;
+								}
+								if(color == Color.WHITE)
+								{
+									if(board[x][y] == 1)
+									{
+										break;
+									}
+									board[x][y] = 1;
+								}
+								
+								if(y > 0) y--;
+								else break;
+							}
+						}
+					}
+					
+					//Right Up
+					lineOfSight = false;
+					if(i-1 > 1)
+					{
+						y = i-1;
+						for(int x = z+1; x < tiles; x++)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									lineOfSight = true;
+									break;
+								}
+							}
+							
+							if(y > 0) y--;
+							else break;
+						}
+					}
+					
+					if(lineOfSight)
+					{
+						if(i-1 > 1)
+						{
+							y = i-1;
+							for(int x = z+1; x < tiles; x++)
+							{
+								if(board[x][y] <= 0) break;
+								
+								if(color == Color.BLACK)
+								{
+									if(board[x][y] == 2)
+									{
+										break;
+									}
+									board[x][y] = 2;
+								}
+								if(color == Color.WHITE)
+								{
+									if(board[x][y] == 1)
+									{
+										break;
+									}
+									board[x][y] = 1;
+								}
+								
+								if(y > 0) y--;
+								else break;
+							}
+						}
+					}
+				}
 	
 	public int getRectangleSize() {
 		return rectangleSize;
