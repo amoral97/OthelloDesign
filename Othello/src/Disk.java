@@ -6,7 +6,7 @@ public class Disk extends GameController{
 	public int column;
 	public int row;
 	private double radius;
-	private Circle circle;
+	public Circle circle;
 
 	public Disk(int column, int row, double radius, Circle c) {
 		this.column = column;

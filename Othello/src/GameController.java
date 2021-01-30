@@ -20,6 +20,8 @@ public class GameController {
 	private ArrayList<Disk> diskArray;
 	private int[][] board;
 	
+	private Color turn = Color.BLACK; 
+	
 	@FXML
 	public void initialize()	{
 		// Draws a green gridpane on the javafx pane by getting the size, amount of tiles, and the dividend of the two to draw the individual tiles.
@@ -48,10 +50,16 @@ public class GameController {
 		}
 		
 		//Initial board disks
-		createDisk(Color.BLACK, 4, 3);
-		createDisk(Color.BLACK, 3, 4);
-		createDisk(Color.WHITE, 3, 3);
-		createDisk(Color.WHITE, 4, 4);
+		board[3][3] = 1;
+		board[4][4] = 1;
+		board[3][4] = 2;
+		board[4][3] = 2;
+		
+		//Initial valid moves check
+		nextToDiskSpots();	
+		lineOfSightCheck(turn);
+		
+		populateBoard();
 		
 		mouseClickChecker();
 		
@@ -69,36 +77,59 @@ public class GameController {
 		
 		diskArray.add(d);
 		
-		//Board Array Key: 0 = blank, 1 = white, 2 = black
+		//Board Array Key: 0 = blank, 1 = white, 2 = black, -1 = valid move
 		if (color == Color.WHITE) board[column][row] = 1;
 		if (color == Color.BLACK) board[column][row] = 2;
-		
-		System.out.println(row);
 		
 		pane.getChildren().add(c);
 		d.draw();
 	}
 	
-	
-	
-	//Temporary, Seeing how to handle mouse clicks and placing disks on the board.
-	//Works so far but not made to interact with much else
 	private void mouseClickChecker()
 	{
 		pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
 		    public void handle(MouseEvent event) {
-		    	if(validMoveCheck((int)event.getSceneX()/rectangleSize, (int)event.getSceneY()/rectangleSize)) createDisk(Color.BLACK, (int)event.getSceneX()/rectangleSize, (int)event.getSceneY()/rectangleSize);
+		    	if(validMoveCheck((int)event.getSceneX()/rectangleSize, (int)event.getSceneY()/rectangleSize, turn))
+		    		{
+		    			if(turn == Color.WHITE)
+		    			{
+		    				board[(int)event.getSceneX()/rectangleSize][(int)event.getSceneY()/rectangleSize]=1;
+		    			}
+		    			if(turn == Color.BLACK)
+		    			{
+		    				board[(int)event.getSceneX()/rectangleSize][(int)event.getSceneY()/rectangleSize]=2;
+		    			}
+		    			//Turn Swap
+		    			if(turn == Color.BLACK) turn = Color.WHITE;
+		    			else turn = Color.BLACK;
+		    		}
 		        else {System.out.println("Invalid Move"); debugDisplayBoard();}
+		    	//Redraw Board and show valid move for next player
+    			nextToDiskSpots();
+    			lineOfSightCheck(turn);
+    			populateBoard();
 		    }
 		});
 	}
 	
-	private boolean validMoveCheck(int column, int row)
+	private boolean validMoveCheck(int column, int row, Color color)
 	{
 		boolean validMove = true;
 		
-		//Decide valid disk spots
-		//This is gonna look really gross
+		//Defines all spots that are next to other disks
+		//nextToDiskSpots();
+		
+		//Check for line of sight to same color disks
+		//lineOfSightCheck(color);
+
+		//Final Decision on if it's a valid spot to make a move
+		if(board[column][row] != -1) validMove = false;
+        
+		return validMove;
+	}
+
+	private void nextToDiskSpots()
+	{
 		for(int i = 0; i < tiles; i++)
 		{
 			for(int z = 0; z < tiles; z++)
@@ -175,11 +206,297 @@ public class GameController {
 				}
 			}
 		}
-
-		//Check if a disk is already there
-        if(board[column][row] != -1) validMove = false;
-        
-		return validMove;
+		debugDisplayBoard();
+	}
+	
+	private void lineOfSightCheck(Color color) {
+		for(int i = 0; i < tiles; i++)
+		{
+			for(int z = 0; z < tiles; z++)
+			{
+				if(board[z][i] == -1)
+				{
+					board[z][i] = 0;
+					//Check Right
+					for(int x = z+1; x < tiles; x++)
+					{
+						if(board[x][i] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[x][i] == 2)
+							{
+								if(Math.abs(z - x) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[x][i] == 1)
+							{
+								if(Math.abs(z - x) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+					}
+					
+					//Check Left
+					for(int x = z-1; x > 0; x--)
+					{
+						if(board[x][i] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[x][i] == 2)
+							{
+								if(Math.abs(z - x) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[x][i] == 1)
+							{
+								if(Math.abs(z - x) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+					}
+					
+					//Check Down
+					for(int y = i+1; y < tiles; y++)
+					{
+						if(board[z][y] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[z][y] == 2)
+							{
+								if(Math.abs(i - y) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[z][y] == 1)
+							{
+								if(Math.abs(i - y) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+					}
+					
+					//Check Up
+					for(int y = i-1; y > 0; y--)
+					{
+						if(board[z][y] <= 0) break;
+						
+						if(color == Color.BLACK)
+						{
+							if(board[z][y] == 2)
+							{
+								if(Math.abs(i - y) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+						if(color == Color.WHITE)
+						{
+							if(board[z][y] == 1)
+							{
+								if(Math.abs(i - y) <= 1) break;
+								else
+								{
+									board[z][i] = -1;
+									break;
+								}
+							}
+						}
+					}
+					
+					//Diagonal Checks
+					//Right Down
+					int y = i;
+					if(i+1 < tiles)
+					{
+						y = i+1;
+						for(int x = z+1; x < tiles; x++)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;
+										break;
+									}
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;
+										break;
+									}
+								}
+							}
+							
+							if(y < tiles-1) y++;
+							else break;
+						}
+					}
+					
+					//Left Down
+					if(i+1 < tiles)
+					{
+						y = i+1;
+						for(int x = z-1; x > 0; x--)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;	
+										break;
+									}
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;
+										break;
+									}
+								}
+							}
+							
+							if(y < tiles-1) y++;
+							else break;
+						}
+					}
+					
+					//Left Up
+					if(i-1 > 1)
+					{
+						y = i-1;
+						for(int x = z-1; x > 0; x--)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;
+										break;
+									}
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;
+										break;
+									}
+								}
+							}
+							
+							if(y > 0) y--;
+							else break;
+						}
+					}
+					
+					//Right Up
+					if(i-1 > 1)
+					{
+						y = i-1;
+						for(int x = z+1; x < tiles; x++)
+						{
+							if(board[x][y] <= 0) break;
+							
+							if(color == Color.BLACK)
+							{
+								if(board[x][y] == 2)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;
+										break;
+									}
+								}
+							}
+							if(color == Color.WHITE)
+							{
+								if(board[x][y] == 1)
+								{
+									if(Math.abs(z - x) <= 1 || Math.abs(i - y) <= 1) break;
+									else
+									{
+										board[z][i] = -1;
+										break;
+									}
+								}
+							}
+							
+							if(y > 0) y--;
+							else break;
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	public void debugDisplayBoard()
@@ -192,9 +509,55 @@ public class GameController {
 			}
 			System.out.println();
 		}
+		System.out.println("------------------------");
+	}
+	
+	private void populateBoard()
+	{
+		for(int z = 0; z < diskArray.size(); z++)
+		{
+			pane.getChildren().clear();
+			
+			for (int i = 0; i < size; i += rectangleSize) {
+				for (int j = 0; j < size; j += rectangleSize) {
+					Rectangle r = new Rectangle(i, j, rectangleSize, rectangleSize);
+					
+					r.setFill(Color.LIMEGREEN);
+					r.setStroke(Color.BLACK);
+					pane.getChildren().add(r);
+				}
+			}
+			
+			diskArray.remove(z);
+		}
+		
+		for(int i = 0; i < tiles; i++)
+		{
+			for(int z = 0; z < tiles; z++)
+			{
+				if(board[z][i] == 0)
+				{
+					//Don't add a disk
+				}
+				if(board[z][i] == 1)
+				{
+					createDisk(Color.WHITE, z, i);
+				}
+				if(board[z][i] == 2)
+				{
+					createDisk(Color.BLACK, z, i);
+				}
+				if(board[z][i] == -1)
+				{
+					createDisk(Color.YELLOW, z, i);
+				}
+			}
+		}
 	}
 	
 	public int getRectangleSize() {
 		return rectangleSize;
 	}
+
+
 }
