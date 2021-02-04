@@ -874,8 +874,18 @@ public class Board {
 		}
 	}
 	
+	private void endGame()
+	{
+		//TODO method to process end game results
+	}
+	
 	public void populateBoard()
 	{
+		
+		int whiteAmount = 0;
+		int blackAmount = 0;
+		int spacesLeft = 0;
+		
 		for(int z = 0; z < diskArray.size(); z++)
 		{
 			pane.getChildren().clear();
@@ -899,22 +909,34 @@ public class Board {
 			{
 				if(board[z][i] == 0)
 				{
-					//Don't add a disk
+					spacesLeft++;
 				}
 				if(board[z][i] == 1)
 				{
 					createDisk(Color.WHITE, z, i);
+					whiteAmount++;
 				}
 				if(board[z][i] == 2)
 				{
 					createDisk(Color.BLACK, z, i);
+					blackAmount++;
 				}
 				if(board[z][i] == -1)
 				{
-					createDisk(Color.YELLOW, z, i);
+					createDisk(Color.YELLOWGREEN, z, i);
 				}
 			}
 		}
+		
+		if(spacesLeft == 0)
+		{
+			endGame();
+		}
+		
+		//Prints spaces left, amount of white and black disks on the board for testing
+		System.out.println("Spaces Left: " + spacesLeft);
+		System.out.println("White Disks: " + whiteAmount);
+		System.out.println("Black Disks: " +blackAmount);
 	}
 	
 	public boolean validMoveCheck(int column, int row, Color color)
