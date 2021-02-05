@@ -912,23 +912,24 @@ public class Board {
 		{
 			for(int z = 0; z < tiles; z++)
 			{
+				//Board Array Key: 0 = blank, 1 = white, 2 = black, -1 = valid move
 				if(board[z][i] == 0)
 				{
 					
 				}
 				if(board[z][i] == 1)
 				{
-					createDisk(Color.WHITE, z, i);
+					createDisk(1, z, i);
 					whiteAmount++;
 				}
 				if(board[z][i] == 2)
 				{
-					createDisk(Color.BLACK, z, i);
+					createDisk(2, z, i);
 					blackAmount++;
 				}
 				if(board[z][i] == -1)
 				{
-					createDisk(Color.YELLOWGREEN, z, i);
+					createDisk(3, z, i);
 					guessCounter++;
 				}
 			}
@@ -959,20 +960,28 @@ public class Board {
 	}
 	
 	//Create a disk based on color and board coordinates
-	private void createDisk(Color color, int column, int row)
+	private void createDisk(int type, int column, int row)
 	{
 		Circle c = new Circle ();
-		c.setFill(color);
 		c.setStroke(Color.BLACK);
+		switch(type) {
+			case 1:
+				c.setFill(Color.WHITE);
+				break;
+			case 2:
+				c.setFill(Color.BLACK);
+				break;
+			case 3: 
+				c.setFill(Color.TRANSPARENT);
+				c.setStroke(Color.YELLOW);
+				c.setStrokeWidth(10);
+		}
+	
 		double radius = rectangleSize / 3.0;
 		
 		Disk d = new Disk(column, row, radius, c);
 		
 		diskArray.add(d);
-		
-		//Board Array Key: 0 = blank, 1 = white, 2 = black, -1 = valid move
-		if (color == Color.WHITE) board[column][row] = 1;
-		if (color == Color.BLACK) board[column][row] = 2;
 		
 		pane.getChildren().add(c);
 		d.draw();
