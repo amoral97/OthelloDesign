@@ -1,5 +1,6 @@
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -9,6 +10,16 @@ public class GameController {
 	// @FXML allows scene builder to recognize indicated variables and methods.
 	@FXML
 	public Pane pane;
+	
+	@FXML
+	public Pane bottomPane;
+	
+	@FXML
+	public Label whiteDiskCount;
+	@FXML
+	public Label blackDiskCount;
+	@FXML
+	public Label finishedLabel;
 	
 	private int size = 400;
 	private int tiles = 8;
@@ -32,7 +43,9 @@ public class GameController {
 		}
 		
 		//Board Initialize
-		boardObj = new Board(size , tiles, pane);
+		boardObj = new Board(size , tiles, pane, bottomPane, whiteDiskCount, blackDiskCount, finishedLabel);
+		
+		bottomPane.setStyle("-fx-background-color: grey;");
 		
 		//Initial valid moves check
 		boardObj.nextToDiskSpots();	

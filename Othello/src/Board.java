@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -7,6 +8,10 @@ import javafx.scene.shape.Rectangle;
 
 public class Board {
 	private Pane pane;
+	private Pane bottomPane;
+	private Label whiteDiskCount;
+	private Label blackDiskCount;
+	private Label finishedLabel;
 	
 	private int[][] board;
 	
@@ -16,11 +21,16 @@ public class Board {
 	
 	private ArrayList<Disk> diskArray;
 	
-	public Board(int size, int tiles, Pane pane)
+	public Board(int size, int tiles, Pane pane, Pane bottomPane, Label whiteDiskCount, Label blackDiskCount, Label finishedLabel)
 	{
 		//Pane pass
 		this.pane = pane;
-		
+		this.bottomPane = bottomPane;
+		//Disk labels pass
+		this.blackDiskCount = blackDiskCount;
+		this.whiteDiskCount = whiteDiskCount;
+		this.finishedLabel = finishedLabel;
+			
 		//Dimensions setup
 		this.tiles = tiles;
 		this.size = size;
@@ -38,7 +48,7 @@ public class Board {
 				board[z][i] = 0;
 			}
 		}
-				
+			
 		//Initial board disks
 		board[3][3] = 1;
 		board[4][4] = 1;
@@ -874,17 +884,12 @@ public class Board {
 		}
 	}
 	
-	private void endGame()
-	{
-		//TODO method to process end game results
-	}
-	
 	public void populateBoard()
 	{
 		
 		int whiteAmount = 0;
 		int blackAmount = 0;
-		int spacesLeft = 0;
+		int guessCounter = 0;
 		
 		for(int z = 0; z < diskArray.size(); z++)
 		{
@@ -909,7 +914,7 @@ public class Board {
 			{
 				if(board[z][i] == 0)
 				{
-					spacesLeft++;
+					
 				}
 				if(board[z][i] == 1)
 				{
@@ -924,19 +929,24 @@ public class Board {
 				if(board[z][i] == -1)
 				{
 					createDisk(Color.YELLOWGREEN, z, i);
+					guessCounter++;
 				}
 			}
 		}
 		
-		if(spacesLeft == 0)
+		if(guessCounter == 0)
 		{
-			endGame();
+			
+			finishedLabel.setText("Finished!");
 		}
 		
+		whiteDiskCount.setText("" + whiteAmount);
+		blackDiskCount.setText("" + blackAmount);
+		
 		//Prints spaces left, amount of white and black disks on the board for testing
-		System.out.println("Spaces Left: " + spacesLeft);
 		System.out.println("White Disks: " + whiteAmount);
-		System.out.println("Black Disks: " +blackAmount);
+		System.out.println("Black Disks: " + blackAmount);
+		System.out.println("Guesses Left: " + guessCounter);
 	}
 	
 	public boolean validMoveCheck(int column, int row, Color color)
