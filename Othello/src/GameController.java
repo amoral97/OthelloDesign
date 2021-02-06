@@ -4,7 +4,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class GameController {
@@ -56,19 +55,17 @@ public class GameController {
 		boardObj.populateBoard();
 		
 		mouseClickChecker();
-		
 	}
 	
 	private void mouseClickChecker()
 	{
 		pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-		    public void handle(MouseEvent event) {
-		    	int x = (int)event.getSceneX()/rectangleSize;
+			public void handle(MouseEvent event) {
+		   		int x = (int)event.getSceneX()/rectangleSize;
     			int y = (int)event.getSceneY()/rectangleSize;
-    			
-    			//Attempt a turn
-    			turnTry(x, y);
-		    }
+    		
+    			if(boardObj.guessCounter != 0) turnTry(x, y);
+		   	}
 		});
 	}
 	

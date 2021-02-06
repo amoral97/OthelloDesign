@@ -11,6 +11,7 @@ public class Board {
 	private Pane bottomPane;
 	private Label whiteDiskCount;
 	private Label blackDiskCount;
+	
 	private Label finishedLabel;
 	
 	private int[][] board;
@@ -20,6 +21,10 @@ public class Board {
 	public int rectangleSize;
 	
 	private ArrayList<Disk> diskArray;
+	
+	public int guessCounter = 0;
+	public int whiteAmount = 0;
+	public int blackAmount = 0;
 	
 	public Board(int size, int tiles, Pane pane, Pane bottomPane, Label whiteDiskCount, Label blackDiskCount, Label finishedLabel)
 	{
@@ -427,7 +432,6 @@ public class Board {
 	}
 	
 	public void diskFlipper(Color color, int z, int i) {
-		
 		//Check Right line of sight
 		boolean lineOfSight = false;
 		for(int x = z+1; x < tiles; x++)
@@ -887,9 +891,9 @@ public class Board {
 	public void populateBoard()
 	{
 		
-		int whiteAmount = 0;
-		int blackAmount = 0;
-		int guessCounter = 0;
+		whiteAmount = 0;
+		blackAmount = 0;
+		guessCounter = 0;
 		
 		for(int z = 0; z < diskArray.size(); z++)
 		{
@@ -921,6 +925,7 @@ public class Board {
 				{
 					createDisk(1, z, i);
 					whiteAmount++;
+					
 				}
 				if(board[z][i] == 2)
 				{
@@ -937,8 +942,8 @@ public class Board {
 		
 		if(guessCounter == 0)
 		{
-			
-			finishedLabel.setText("Finished!");
+			if(whiteAmount > blackAmount) finishedLabel.setText("Finished! White is the winner!");
+			else finishedLabel.setText("Finished! Black is the winner!");
 		}
 		
 		whiteDiskCount.setText("" + whiteAmount);
@@ -1004,5 +1009,7 @@ public class Board {
 		board[x][y] = type;
 	}
 	
-	
+	public void setBoard(int[][] board) {
+		this.board = board;
+	}
 }
