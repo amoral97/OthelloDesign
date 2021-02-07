@@ -6,6 +6,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Allows the GUI initialize the board and
+ * all the GUI elements and handles all
+ * methods being run from the Board class.
+ * 
+ * @author Adan Morales & Harrison Gardner
+ *
+ */
 public class GameController {
 	// @FXML allows scene builder to recognize indicated variables and methods.
 	@FXML
@@ -69,6 +77,13 @@ public class GameController {
 		});
 	}
 	
+	/**
+	 * Takes the board position clicked on and attempts
+	 * to place a disk there.
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	private void turnTry(int x, int y)
 	{
 		if(boardObj.validMoveCheck(x, y, turn))

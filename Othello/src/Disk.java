@@ -1,6 +1,13 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+/**
+ * Sets up the properties for the disk
+ * and draws itself to the window.
+ * 
+ * @author Adan Morales & Harrison Gardner
+ *
+ */
 public class Disk extends GameController{
 
 	public int column;

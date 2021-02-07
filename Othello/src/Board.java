@@ -6,6 +6,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Handles all tasks relating to keeping track of the board state and
+ * displaying the board to the players.
+ * 
+ * @author Adan Morales & Harrison Gardner
+ *
+ */
 public class Board {
 	private Pane pane;
 	private Pane bottomPane;
@@ -26,11 +33,23 @@ public class Board {
 	public int whiteAmount = 0;
 	public int blackAmount = 0;
 	
+	/**
+	 * Sets up the board object variables.
+	 * 
+	 * @param size
+	 * @param tiles
+	 * @param pane
+	 * @param bottomPane
+	 * @param whiteDiskCount
+	 * @param blackDiskCount
+	 * @param finishedLabel
+	 */
 	public Board(int size, int tiles, Pane pane, Pane bottomPane, Label whiteDiskCount, Label blackDiskCount, Label finishedLabel)
 	{
 		//Pane pass
 		this.pane = pane;
 		this.bottomPane = bottomPane;
+		
 		//Disk labels pass
 		this.blackDiskCount = blackDiskCount;
 		this.whiteDiskCount = whiteDiskCount;
@@ -60,7 +79,12 @@ public class Board {
 		board[3][4] = 2;
 		board[4][3] = 2;
 	}
-
+	
+	/**
+	 * Finds potential valid moves by
+	 * outlining all spots that are empty
+	 * and next to a disk.
+	 */
 	public void nextToDiskSpots()
 	{
 		for(int i = 0; i < tiles; i++)
@@ -141,6 +165,13 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Checks that the potential valid move spot
+	 * has a disk in it's line of sight that
+	 * matches the current players color.
+	 * 
+	 * @param color
+	 */
 	public void lineOfSightCheck(Color color) {
 		for(int i = 0; i < tiles; i++)
 		{
@@ -431,6 +462,14 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * After a disk is placed, finds all opposite color
+	 * disks that need to be flipped.
+	 * 
+	 * @param color
+	 * @param z
+	 * @param i
+	 */
 	public void diskFlipper(Color color, int z, int i) {
 		//Check Right line of sight
 		boolean lineOfSight = false;
@@ -888,6 +927,10 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Creates the disk objects based on the 2d board
+	 * array and finds the amount of each disk color.
+	 */
 	public void populateBoard()
 	{
 		
@@ -948,13 +991,17 @@ public class Board {
 		
 		whiteDiskCount.setText("" + whiteAmount);
 		blackDiskCount.setText("" + blackAmount);
-		
-		//Prints spaces left, amount of white and black disks on the board for testing
-		System.out.println("White Disks: " + whiteAmount);
-		System.out.println("Black Disks: " + blackAmount);
-		System.out.println("Guesses Left: " + guessCounter);
 	}
 	
+	/**
+	 * Small method to quickly tell if a move is
+	 * in a valid spot.
+	 * 
+	 * @param column
+	 * @param row
+	 * @param color
+	 * @return
+	 */
 	public boolean validMoveCheck(int column, int row, Color color)
 	{
 		boolean validMove = true;
@@ -964,7 +1011,13 @@ public class Board {
 		return validMove;
 	}
 	
-	//Create a disk based on color and board coordinates
+	/**
+	 * Create a disk based on color and board coordinates.
+	 * 
+	 * @param type
+	 * @param column
+	 * @param row
+	 */
 	private void createDisk(int type, int column, int row)
 	{
 		Circle c = new Circle ();
